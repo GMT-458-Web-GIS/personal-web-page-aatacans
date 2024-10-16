@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://openlayers.org/en/v6.8.1/css/ol.css" />
+    <script src="https://openlayers.org/en/v6.8.1/build/ol.js"></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 600px; 
+            display: none; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <div class="logo">
+                <a href="#" id="logo"> 
+                    <img src="logo.png" alt="logo">
+                </a>
+            </div>
+            <ul>
+                <li><a href="index.html">Home Page</a></li>
+                <li><a href="hakkimda.html">About Me</a></li>
+                <li><a href="iletisim.html" class="active">Contact</a></li>
+            </ul>
+        </div>
+        
+        <div class="center">
+            <h1>Contact</h1>
+            <p class="bb">You can reach me from the links below:</p>
+            
+            
+            <p class="email">Email: <a href="mailto:azizatacans51@gmail.com">azizatacans51@gmail.com</a></p>
+            
+            
+            <p class="linkedin">LinkedIn: <a href="https://www.linkedin.com/in/azizatacansancaktaroglu" target="_blank">My LinkedIn Profile</a></p>
+
+            
+            <p class="github">GitHub: <a href="https://github.com/aatacans" target="_blank">My GitHub Profile</a></p>
+        </div>
+        
+        <div id="map"></div> 
+    </div>
+
+    <script>
+        const cities = [
+            { name: 'Ankara', coordinates: [32.8597, 39.9334] },
+            { name: 'İstanbul', coordinates: [28.9784, 41.0082] },
+            { name: 'Konya', coordinates: [32.4822, 37.8715] },
+            { name: 'Kayseri', coordinates: [35.4787, 38.4192] },
+            { name: 'Mersin', coordinates: [34.6413, 36.8033] },
+            { name: 'Samsun', coordinates: [36.33, 41.2865] },
+            { name: 'Sivas', coordinates: [37.0179, 39.7480] },
+        ];
+
+        let map; 
+
+        const createMap = () => {
+            if (!map) { 
+                map = new ol.Map({
+                    target: 'map',
+                    layers: [
+                        new ol.layer.Tile({
+                            source: new ol.source.OSM(),
+                        }),
+                    ],
+                    view: new ol.View({
+                        center: ol.proj.fromLonLat([35.0, 39.0]),
+                        zoom: 6,
+                    }),
+                });
+
+                cities.forEach(city => {
+                    const marker = new ol.Feature({
+                        geometry: new ol.geom.Point(ol.proj.fromLonLat(city.coordinates)),
+                        name: city.name,
+                    });
+
+                    const vectorSource = new ol.source.Vector({
+                        features: [marker],
+                    });
+
+                    const markerVectorLayer = new ol.layer.Vector({
+                        source: vectorSource,
+                        style: new ol.style.Style({
+                            image: new ol.style.Icon({
+                                anchor: [0.5, 1],
+                                src: 'https://openlayers.org/en/v6.8.1/examples/data/icon.png',
+                            }),
+                        }),
+                    });
+
+                    map.addLayer(markerVectorLayer);
+                });
+            }
+        };
+
+        document.getElementById('logo').addEventListener('click', (event) => {
+            event.preventDefault(); 
+            const mapDiv = document.getElementById('map');
+
+            if (mapDiv.style.display === 'none' || mapDiv.style.display === '') {
+                mapDiv.style.display = 'block'; 
+                createMap();
+            } else {
+                mapDiv.style.display = 'none'; 
+            }
+        });
+    </script>
+</body>
+</html>
